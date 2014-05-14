@@ -1,0 +1,31 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Baum{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/leaflet.css" type="text/css" />
+<link rel="stylesheet" href="{{url_for('.static', filename='css/lightbox.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/default.css')}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="/static/js/leaflet.js" type="text/javascript"></script>
+<script src="{{url_for('.static', filename='js/lightbox.min.js')}}"></script>
+<script src="{{url_for('.static', filename='js/default.js')}}"></script>
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <ul>
+    <li><a href="/">Start</a></li>
+    <li><a href="/new-tree">Neuer Baum</a></li>
+    <li><a href="/informationen">Infos</a></li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div id="map"></div>
+  <div id="details"></div>
+{% endblock %}

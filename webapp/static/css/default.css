@@ -1,0 +1,68 @@
+
+body a, body a:hover {
+  color: #FFFFFF;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.navbar {
+  margin-bottom: 0;
+  background-color: rgba(0,0,0,0.8);
+  padding: 5px 10px;
+  border: 0;
+  height: 45px;
+  min-height: 0;
+}
+
+.navbar ul {
+  color: #FFFFFF;
+  font-size: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.navbar li {
+  list-style: none;
+  float: left;
+  margin-right: 20px;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+#details {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  background-color: rgba(0,0,0,0.8);
+  padding: 5px 0;
+}
+
+#details * {
+  color: #FFFFFF;
+}
+
+#close-sidebar {
+  float: right;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#details-team {
+  font-style: italic;
+}
+
+select {
+  color: #FFFFFF;
+  background-color: rgba(0,0,0,0.8);
+  border: 1px solid #666666;
+}

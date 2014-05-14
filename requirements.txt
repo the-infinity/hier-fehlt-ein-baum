@@ -1,0 +1,6 @@
+translitcodec
+gunicorn
+Flask
+Flask-Security
+Flask-SQLAlchemy
+Flask-MySQL
