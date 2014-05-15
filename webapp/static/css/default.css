@@ -12,7 +12,6 @@ h2 {
   background-color: rgba(0,0,0,0.8);
   padding: 5px 10px;
   border: 0;
-  height: 45px;
   min-height: 0;
 }
 
@@ -65,4 +64,34 @@ select {
   color: #FFFFFF;
   background-color: rgba(0,0,0,0.8);
   border: 1px solid #666666;
+}
+
+#content-tree-form, #content-tree-info {
+  margin: 50px 20px;
+}
+
+#content-tree-form form {
+  margin-bottom: 20px;
+}
+
+#new-tree-map {
+  margin-top: 20px;
+  height: 500px;
+}
+
+#content-tree-info img {
+  margin-right: 20px;
+}
+
+
+@media (min-width: 350px) and (max-width: 500px) {
+  .navbar ul {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 350px) {
+  .navbar ul {
+    font-size: 12px;
+  }
 }

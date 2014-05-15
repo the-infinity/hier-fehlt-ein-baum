@@ -16,7 +16,7 @@ $(document).ready(function() {
     var backgroundLayer = new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
       maxZoom: 18,
       minZoom: 4,
-      attribution: 'Map Data © <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>.'
+      attribution: 'Map Data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>.'
     });
     map.setView(new L.LatLng(51.481845, 7.216236), 13).addLayer(backgroundLayer);
     get_trees();
@@ -34,20 +34,25 @@ function get_trees() {
       markers.clearLayers();
     $.each(result['response'], function(key, tree) {
       console.log(tree);
-      if (tree['status'] == 1)
-        marker = L.marker([tree['lat'], tree['lng']], {icon: greenIcon, title: tree.id});
-      else
+      if (tree['type'] == 1)
         marker = L.marker([tree['lat'], tree['lng']], {icon: redIcon, title: tree.id});
+      else if (tree['type'] == 2)
+        marker = L.marker([tree['lat'], tree['lng']], {icon: greenIcon, title: tree.id});
+      else if (tree['type'] == 3) {
+        marker = L.marker([tree['lat'], tree['lng']], {title: tree.id});
+      }
       marker.on('click', function (current_marker) {
         current_marker_id = current_marker['target']['options']['title'];
         $.getJSON('/tree-details?id=' + current_marker_id, function(result) {
           $("#details").animate({width:"290px", 'padding-left': '10px', 'padding-right': '10px'});
           tree = result['response'];
           status = '';
-          if (tree['status'] == 0)
+          if (tree['type'] == 1)
             status = 'Baum gefällt, noch nicht wieder neu gepflanzt';
-          else if (tree['status'] == 1)
+          else if (tree['type'] == 2)
             status = 'Baum gefällt und neu gepflanzt';
+          else if (tree['type'] == 3)
+            status = 'Vorschlag für einen neuen Baum';
           var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['street'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';

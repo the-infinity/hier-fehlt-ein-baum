@@ -29,42 +29,47 @@ def cache_max_age(hours):
   seconds = hours * 60 * 60
   return 'max-age=' + str(seconds)
 
-def geocode(address = "", postalcode = "", city = "", searchstring = ""):
+def geocode(location_string):
   """
-  Löst eine Straßen-, PLZ und Stadt-Angabe zu einer Geo-Postion
+  Löst eine Straßen- und optional PLZ-Angabe zu einer Geo-Postion
+  auf. Beispiel: "Straßenname (12345)"
   """
-  address = address.encode('utf-8')
-  postalcode = postalcode.encode('utf-8')
-  city = city.encode('utf-8')
-  searchstring = searchstring.encode('utf-8')
+  postal = None
+  street = location_string.encode('utf-8')
+  postalre = re.compile(r'(.+)\s+\(([0-9]{5})\)')
+  postal_matching = re.match(postalre, street)
+  postal = None
+  if postal_matching is not None:
+    street = postal_matching.group(1)
+    postal = postal_matching.group(2)
   url = 'http://open.mapquestapi.com/nominatim/v1/search.php'
-  if not searchstring:
-    searchstring = address + ' ' + city
+  city = app.config['GEOCODING_DEFAULT_CITY']
+  if type(city) == unicode:
+    city = city.encode('utf8')
   params = {'format': 'json',  # json
-    'q': searchstring,
-    'addressdetails': 1,
-    'accept-language': 'de_DE',
-    'countrycodes': 'de'}
+            'q': ', '.join([street, city]),
+            'addressdetails': 1,
+            'accept-language': 'de_DE',
+            'countrycodes': app.config['GEOCODING_DEFAULT_COUNTRY']}
   request = urllib2.urlopen(url + '?' + urllib.urlencode(params))
   response = request.read()
   addresses = json.loads(response)
   addresses_out = []
-  for n in range(len(addresses)):
-    for key in addresses[n].keys():
+  print addresses
+  for address in addresses:
+    for key in address.keys():
       if key in ['address', 'boundingbox', 'lat', 'lon', 'osm_id']:
         continue
-      del addresses[n][key]
-    # skip if no road contained
-    #if 'road' not in addresses[n]['address']:
-    #  continue
+      del address[key]
     # skip if not in correct county
-    #if 'county' not in addresses[n]['address']:
-    #  continue
-    #if addresses[n]['addåress']['county'] != city and city:
-    #  continue
-    #if 'postcode' in addresses[n]['address'] and addresses[n]['address']['postcode'] == postalcode:
-    addresses_out.append(addresses[n])
-  print addresses_out
+    if 'county' not in address['address']:
+      continue
+    if address['address']['county'] != app.config['GEOCODING_FILTER_COUNTY']:
+      continue
+    if postal is not None:
+      if 'postcode' in address['address'] and address['address']['postcode'] != postal:
+        continue
+    addresses_out.append(address)
   return addresses_out
 
 def distance_earth(lat1, long1, lat2, long2):
