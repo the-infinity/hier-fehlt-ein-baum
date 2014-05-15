@@ -83,18 +83,17 @@ def new_tree():
     tree.public = 0
     db.session.add(tree)
     db.session.commit()
-    #msg = Message(recipients=[edit_user.email],
-    #  sender="mail@ernestoruge.de",
-    #  body="Neuer Baum eingetragen",
-    #  html=content_html,
-    #  subject=u"Neuer Baum wurde eingereicht")
-    #mail.send(msg)
+    msg = Message(recipients=[edit_user.email],
+      sender="mail@ernestoruge.de",
+      body=u"Freischalten nötig.",
+      subject=u"Neuer Baum wurde eingereicht")
+    mail.send(msg)
     if request.files['image'].filename:
       image_data = request.files['image'].read()
       # write new image data
       open(os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '.jpg'), 'w').write(image_data)
       call(['/usr/bin/convert', '-resize', '270x270', os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '.jpg'), os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '-small.jpg')])
-      tree.image = 1
+      tree.picture = 1
       db.session.add(tree)
       db.session.commit()
     return redirect("/")
@@ -109,25 +108,73 @@ def information():
 @app.route("/admin")
 @basic_auth.required
 def admin():
-  return render_template('information.html')
+  trees = Tree.query.all()
+  return render_template('admin.html', trees=trees)
 
+@app.route("/admin-action")
+@basic_auth.required
+def admin_action():
+  start = time.time()
+  jsonp_callback = request.args.get('callback', None)
+  publish = int(request.args.get('publish', 0))
+  status = 0
+  tree_id = 0
+  if publish:
+    tree = Tree.query.filter_by(id=publish).first_or_404()
+    tree.public = 1
+    db.session.add(tree)
+    db.session.commit()
+    tree_id = publish
+    status = 1
+  depublish = int(request.args.get('depublish', 0))
+  if depublish:
+    tree = Tree.query.filter_by(id=depublish).first_or_404()
+    tree.public = 0
+    db.session.add(tree)
+    db.session.commit()
+    tree_id = depublish
+    status = 1
+  delete = int(request.args.get('delete', 0))
+  if delete:
+    tree = Tree.query.filter_by(id=tree_id).first_or_404()
+    #tree.public = 1
+    #db.session.add(tree)
+    #db.session.commit()
+    tree_id = delete
+    status = 1
+  obj = {
+    'result': status,
+    'tree_id': tree_id
+  }
+  obj['duration'] = int((time.time() - start) * 1000)
+  json_output = json.dumps(obj, sort_keys=True)
+  if jsonp_callback is not None:
+      json_output = jsonp_callback + '(' + json_output + ')'
+  response = make_response(json_output, 200)
+  response.mimetype = 'application/json'
+  response.headers['Pragma'] = 'no-cache'
+  response.headers['Expires'] = -1
+  response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+  return response
+  
 @app.route("/geocode")
 def geocode():
-    start = time.time()
-    jsonp_callback = request.args.get('callback', None)
-    address = request.args.get('address', '')
-    if address == '':
-        abort(400)
-    obj = {
-        'result': util.geocode(address)
-    }
-    obj['duration'] = int((time.time() - start) * 1000)
-    json_output = json.dumps(obj, sort_keys=True)
-    if jsonp_callback is not None:
-        json_output = jsonp_callback + '(' + json_output + ')'
-    response = make_response(json_output, 200)
-    response.mimetype = 'application/json'
-    response.headers['Expires'] = util.expires_date(hours=24)
-    response.headers['Cache-Control'] = util.cache_max_age(hours=24)
-    return response
+  start = time.time()
+  jsonp_callback = request.args.get('callback', None)
+  address = request.args.get('address', '')
+  if address == '':
+    abort(400)
+  obj = {
+    'result': util.geocode(address)
+  }
+  obj['duration'] = int((time.time() - start) * 1000)
+  json_output = json.dumps(obj, sort_keys=True)
+  if jsonp_callback is not None:
+    json_output = jsonp_callback + '(' + json_output + ')'
+  response = make_response(json_output, 200)
+  response.mimetype = 'application/json'
+  response.headers['Pragma'] = 'no-cache'
+  response.headers['Expires'] = -1
+  response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+  return response
 

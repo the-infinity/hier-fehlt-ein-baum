@@ -20,6 +20,7 @@ h2 {
   font-size: 20px;
   list-style: none;
   padding: 0;
+  height: 19px;
 }
 
 .navbar li {
@@ -38,7 +39,7 @@ h2 {
 
 #details {
   position: absolute;
-  top: 45px;
+  top: 39px;
   right: 0;
   bottom: 0;
   width: 0;
@@ -66,7 +67,7 @@ select {
   border: 1px solid #666666;
 }
 
-#content-tree-form, #content-tree-info {
+#content-tree-form, #content-tree-info, #content-admin {
   margin: 50px 20px;
 }
 
@@ -83,15 +84,48 @@ select {
   margin-right: 20px;
 }
 
+#content-admin a {
+  color: #000000;
+}
+#content-admin .admin-action span {
+  cursor: pointer;
+}
+
+#content-admin span {
+  position: relative;
+}
+
+#content-admin .admin-picture span img {
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  display: none;
+  z-index: 10;
+  border: 1px solid #000000;
+}
+
+#content-admin .admin-picture span:hover img {
+  display: inline;
+}
 
 @media (min-width: 350px) and (max-width: 500px) {
   .navbar ul {
     font-size: 16px;
+    height: 15px;
+  }
+  
+  #details {
+    top: 35px;
   }
 }
 
 @media (max-width: 350px) {
   .navbar ul {
     font-size: 12px;
+    height: 10px;
+  }
+  
+  #details {
+    top: 30px;
   }
 }

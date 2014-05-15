@@ -12,7 +12,7 @@
 {{super()}}
 <script src="/static/js/leaflet.js" type="text/javascript"></script>
 <script src="{{url_for('.static', filename='js/lightbox.min.js')}}"></script>
-<script src="{{url_for('.static', filename='js/default.js')}}"></script>
+<script src="{{url_for('.static', filename='js/admin.js')}}"></script>
 {% endblock %}
 
 {% block navbar %}
@@ -28,5 +28,43 @@
 
 {% block content %}
 <div id="content-admin">
+  <h1>Admin-Interface</h1>
+  <table class="visible sortable table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Typ</th>
+        <th>Straße</th>
+        <th>Beschreibung</th>
+        <th>Bild</th>
+        <th>Funktionen</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>ID</th>
+        <th>Typ</th>
+        <th>Straße</th>
+        <th>Beschreibung</th>
+        <th>Bild</th>
+        <th>Funktionen</th>
+      </tr>
+    </tfoot>
+    <tbody>
+      {% for tree in trees %}
+      <tr>
+        <td>{{ tree.id }}</td>
+        <td>
+          {% if tree.type == 1 %}<img src="/static/js/images/marker-icon-red.png" />{% endif %}
+          {% if tree.type == 2 %}<img src="/static/js/images/marker-icon-green.png" />{% endif %}
+          {% if tree.type == 3 %}<img src="/static/js/images/marker-icon.png" />{% endif %}
+        </td>
+        <td>{{ tree.address }}</td>
+        <td>{{ tree.descr }}</td>
+        <td class="admin-picture">{% if tree.picture %}<span>zeigen<img src="/static/img/tree/{{ tree.id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
+        <td class="admin-action">{% if tree.public %}<span class="action-depublish" id="depublish-{{ tree.id }}">depublizieren</span>{% else %}<span class="action-publish" id="publish-{{ tree.id }}">publizieren</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
 </div>
 {% endblock %}

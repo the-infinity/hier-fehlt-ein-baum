@@ -33,7 +33,7 @@ class NewTree(Form):
     label=u'Zusatzinfornationen',
     validators=[validators.Required(), validators.Length(max=32000)],
     description='')
-  image = FileField(
+  picture = FileField(
     label = 'Bild',
     description='JPG-Datei. Zeigen Sie mit einem Bild welchen Ort genau Sie meinen.')
   lat = HiddenField(
