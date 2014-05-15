@@ -27,6 +27,15 @@
 {% endblock %}
 
 {% block content %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul id="flashes" class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message|safe }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
   <div id="map"></div>
   <div id="details"></div>
 {% endblock %}

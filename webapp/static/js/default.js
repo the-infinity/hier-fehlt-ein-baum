@@ -42,6 +42,9 @@ function get_trees() {
         marker = L.marker([tree['lat'], tree['lng']], {title: tree.id});
       }
       marker.on('click', function (current_marker) {
+        if ($('#flashes').exists())
+          $('#flashes').remove();
+        
         current_marker_id = current_marker['target']['options']['title'];
         $.getJSON('/tree-details?id=' + current_marker_id, function(result) {
           $("#details").animate({width:"290px", 'padding-left': '10px', 'padding-right': '10px'});

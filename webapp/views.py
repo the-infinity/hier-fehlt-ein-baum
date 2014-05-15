@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 from webapp import app, basic_auth, mail
-from flask import render_template, make_response, abort, request, Response, redirect
+from flask import render_template, make_response, abort, request, Response, redirect, flash
 from flask.ext.mail import Message
 from models import *
 from forms import *
@@ -89,14 +89,15 @@ def new_tree():
       body=u"Freischalten nötig.",
       subject=u"Neuer Baum wurde eingereicht")
     mail.send(msg)
-    if request.files['image'].filename:
-      image_data = request.files['image'].read()
+    if request.files['picture'].filename:
+      image_data = request.files['picture'].read()
       # write new image data
       open(os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '.jpg'), 'w').write(image_data)
       call(['/usr/bin/convert', '-resize', '270x270', os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '.jpg'), os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree.id) + '-small.jpg')])
       tree.picture = 1
       db.session.add(tree)
       db.session.commit()
+    flash(u'Eintrag wurde gespeichert und wird nun geprüft. Danke fürs Mitwirken!')
     return redirect("/")
   return render_template('new-tree.html', tree_form=tree_form)
 
