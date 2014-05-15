@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from webapp import app, basic_auth
+from webapp import app, basic_auth, mail
 from flask import render_template, make_response, abort, request, Response, redirect
 from flask.ext.mail import Message
 from models import *
