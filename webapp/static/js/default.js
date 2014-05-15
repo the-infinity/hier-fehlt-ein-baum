@@ -56,7 +56,7 @@ function get_trees() {
             status = 'Baum gefällt und neu gepflanzt';
           else if (tree['type'] == 3)
             status = 'Vorschlag für einen neuen Baum';
-          var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['street'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
+          var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['address'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';
           html += '<p>Beschreibung:<br />' +  tree['descr'] + '</p>'
