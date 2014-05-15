@@ -84,7 +84,7 @@ def new_tree():
     tree.public = 0
     db.session.add(tree)
     db.session.commit()
-    msg = Message(recipients=[edit_user.email],
+    msg = Message(recipients=["mail@ernestoruge.de"],
       sender="mail@ernestoruge.de",
       body=u"Freischalten nötig.",
       subject=u"Neuer Baum wurde eingereicht")
