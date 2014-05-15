@@ -2,6 +2,7 @@
 
 from webapp import app, basic_auth
 from flask import render_template, make_response, abort, request, Response, redirect
+from flask.ext.mail import Message
 from models import *
 from forms import *
 import models, util
