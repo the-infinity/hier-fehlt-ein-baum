@@ -58,6 +58,7 @@ def tree_details():
     'picture': tree.picture,
     'lat': tree.lat,
     'lng': tree.lng,
+    'chop_reason': tree.chop_reason,
     'type': tree.type
   }
   ret = {

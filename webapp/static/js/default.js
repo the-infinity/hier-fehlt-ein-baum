@@ -68,7 +68,7 @@ function get_trees() {
           var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['address'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';
-          html += '<p>Beschreibung:<br />' +  tree['descr'] + '</p>'
+          html += '<p>Grund für die Fällung:<br />' + tree['chop_reason'] + '</p><p>Beschreibung:<br />' +  tree['descr'] + '</p>'
           $("#details").html(html);
         });
       });
