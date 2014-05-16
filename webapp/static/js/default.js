@@ -64,7 +64,7 @@ function get_trees() {
           else if (tree['type'] == 3)
             status = 'Vorschlag für einen neuen Baum';
           else if (tree['type'] == 4)
-            status = 'Baum gefällt, nicht bekannt ob Neupflanzung erfolgt ist';
+            status = 'Baum gefällt, nicht bekannt, ob Neupflanzung erfolgt ist';
           var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['address'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';
