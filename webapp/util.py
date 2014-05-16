@@ -9,7 +9,10 @@ import urllib2
 import json
 import bson
 import math
-from webapp import app
+import requests
+import utm
+from models import *
+from webapp import app, db
 
 def rfc1123date(value):
   """
@@ -28,6 +31,42 @@ def cache_max_age(hours):
   """String commonly used for Cache-Control response headers"""
   seconds = hours * 60 * 60
   return 'max-age=' + str(seconds)
+
+def sync_gis():
+  request_cookie = requests.get(app.config['GIS_URL_COOKIE'])
+  request_data = requests.get(app.config['GIS_URL_DATA'], cookies=request_cookie.cookies)
+  data = request_data.json()['features']
+  for dataset in data:
+    if Tree.query.filter_by(external_id=dataset['attributes']['OBJECTID']).count() == 0:
+      print "Add new Dataset with external ID %s" % dataset['attributes']['OBJECTID']
+      new_tree = Tree()
+      new_tree.external_id = dataset['attributes']['OBJECTID']
+      lat_lng = utm.to_latlon(dataset['geometry']['x'], dataset['geometry']['y'], 32, 'U')
+      new_tree.lat = lat_lng[0]
+      new_tree.lng = lat_lng[1]
+      if len(dataset['attributes']['ADRESSE'].strip()):
+        new_tree.address = dataset['attributes']['ADRESSE']
+      if len(dataset['attributes'][u'GEH\xf6lZFL\xe4c'].strip()):
+        new_tree.tree_type_old = dataset['attributes'][u'GEH\xf6lZFL\xe4c']
+      if len(dataset['attributes'][u'F\xe4lLGRUND'].strip()):
+        new_tree.chop_reason = dataset['attributes'][u'F\xe4lLGRUND']
+      descr = ''
+      if len(dataset['attributes'][u'F\xe4lLUNG'].strip()):
+        descr += u'Zeitpunkt der Fällung: ' + dataset['attributes'][u'F\xe4lLUNG'].strip()
+      new_tree.descr = descr
+      new_tree.created_at = datetime.datetime.now()
+      new_tree.updated_at = datetime.datetime.now()
+      new_tree.author = 'Stadt Bochum'
+      new_tree.email = 'info@bochum.de'
+      new_tree.city = 'Bochum'
+      new_tree.public = 1
+      new_tree.postalcode = ''
+      new_tree.type = 4
+      db.session.add(new_tree)
+      db.session.commit()
+  #print utm.to_latlon(374050.00569999963, 5705060.091499999, 32, 'U')
+  #print data['features']
+
 
 def geocode(location_string):
   """

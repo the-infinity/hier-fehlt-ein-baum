@@ -5,6 +5,8 @@ var GreenIcon;
 var greenIcon = null;
 var RedIcon;
 var redIcon = null;
+var PinkIcon;
+var pinkIcon = null;
 
 $(document).ready(function() {
   if ($('#map').exists()) {
@@ -12,6 +14,8 @@ $(document).ready(function() {
     greenIcon = new GreenIcon();
     var RedIcon = L.Icon.Default.extend({ options: { iconUrl: '/static/js/images/marker-icon-red.png' } });
     redIcon = new RedIcon();
+    var PinkIcon = L.Icon.Default.extend({ options: { iconUrl: '/static/js/images/marker-icon-pink.png' } });
+    pinkIcon = new PinkIcon();
     map = new L.Map('map', {});
     var backgroundLayer = new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
       maxZoom: 18,
@@ -41,6 +45,9 @@ function get_trees() {
       else if (tree['type'] == 3) {
         marker = L.marker([tree['lat'], tree['lng']], {title: tree.id});
       }
+      else if (tree['type'] == 4) {
+        marker = L.marker([tree['lat'], tree['lng']], {icon: pinkIcon, title: tree.id});
+      }
       marker.on('click', function (current_marker) {
         if ($('#flashes').exists())
           $('#flashes').remove();
@@ -56,6 +63,8 @@ function get_trees() {
             status = 'Baum gefällt und neu gepflanzt';
           else if (tree['type'] == 3)
             status = 'Vorschlag für einen neuen Baum';
+          else if (tree['type'] == 4)
+            status = 'Baum gefällt, nicht bekannt ob Neupflanzung erfolgt ist';
           var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['address'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';

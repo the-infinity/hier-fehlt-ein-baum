@@ -25,8 +25,19 @@ class Tree(db.Model):
   lat = db.Column(db.Numeric(precision=10,scale=7))
   lng = db.Column(db.Numeric(precision=10,scale=7))
   
+  external_id = db.Column(db.String(255))
+  created_at = db.Column(db.DateTime())
+  updated_at = db.Column(db.DateTime())
+  type_suggestion = db.Column(db.Integer())
+  
+  tree_type_old = db.Column(db.String(255))
+  tree_type_new = db.Column(db.String(255))
+  chop_reason = db.Column(db.String(255))
+  
+  
+  
   def __init__(self):
     pass
 
   def __repr__(self):
-    return '<Tree %r>' % self.name
+    return '<Tree %r>' % self.id
