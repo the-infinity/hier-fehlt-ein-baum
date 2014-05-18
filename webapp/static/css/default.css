@@ -69,13 +69,13 @@ h2 {
   margin-bottom: 5px;
 }
 
-#report-change {
+#report-change, #report-image {
   margin-top: 0px;
   text-align: center;
   font-style: italic;
 }
 
-#report-change span {
+#report-change span, #report-image span {
   cursor: pointer;
 }
 
@@ -103,6 +103,7 @@ select {
   color: #FFFFFF;
   background-color: rgba(0,0,0,0.8);
   border: 1px solid #666666;
+  width: 270px;
 }
 
 .content-text {

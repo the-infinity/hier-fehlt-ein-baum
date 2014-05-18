@@ -12,7 +12,8 @@ var type_values = Array(
   'Baum wurde gefällt und noch nicht wieder neu gepflanzt',
   'Baum gefällt und neu gepflanzt',
   'Vorschlag für einen neuen Baum',
-  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist');
+  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist',
+  'Neupflanzung nicht möglich oder sinnvoll');
 var current_tree_id = null;
 
 $(document).ready(function() {
@@ -57,7 +58,6 @@ function get_trees() {
       marker.on('click', function (current_marker) {
         if ($('#flashes').exists())
           $('#flashes').remove();
-        
         current_marker_id = current_marker['target']['options']['title'];
         $.getJSON('/tree-details?id=' + current_marker_id, function(result) {
           $("#details").animate({width:"290px"});
@@ -68,16 +68,36 @@ function get_trees() {
           html += '<h3>Status</h3><p>' + type_values[tree['type']] + '</p>'
           html += '<p id="report-change"><span>Änderung melden</span></p>';
           html += '<h3>Adresse</h3><p>' + tree['address'] + ', ' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
+          html += '<h3>Bild</h3>'
           if (tree['picture'] == 1)
-            html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';
+            html += '<p><a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a></p></p>';
+          else
+            html += '<p id="report-image"><span>Bild vorschlagen</span></p>';
           html += '<h3>Grund für die Fällung</h3><p>' + tree['chop_reason'] + '</p>';
-          html += '<h3>Beschreibung</h3><p>' +  tree['descr'] + '</p>'
+          html += '<h3>Gefällte Bäume</h3><p>' + tree['tree_type_old'] + '</p>';
+          html += '<h3>Beschreibung</h3><p>' +  tree['descr'] + '</p>';
+          html += '<h3>Datenquelle</h3><p>' + tree['source'] + '</p>';
           $('#details').html(html);
           $('#report-change span').click(function() {
             html = 'Der Status hat sich wie folgt geändert:<br/><form><select>';
             for (i=0; i < type_values.length; i++)
               html += '<option value="' + i + '">' + type_values[i] + '</option>';
             html += '</select><input type="submit" value="absenden" /></form>';
+            $("#report-change").html(html);
+            $('#report-change form').submit(function(event) {
+              event.preventDefault();
+              data = {
+                'id': current_tree_id,
+                'field': 'type',
+                'value': $('#report-change select').val()
+              }
+              $.get('/tree-suggest', data, function() {
+                $("#report-change").html('Status-Vorschlag erfolgreich gesendet. Danke für die Rückmeldung!');
+              });
+            });
+          });
+          $('#report-image span').click(function() {
+            html = 'Ich schlage folgendes Bild vor:<br/><form method="post" enctype="multipart/form-data"><input type="" /></form>';
             $("#report-change").html(html);
             $('#report-change form').submit(function(event) {
               event.preventDefault();

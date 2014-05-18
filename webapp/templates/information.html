@@ -3,18 +3,20 @@
 {% block content %}
 <div id="content-tree-info" class="content-text">
   <h1>Informationen</h1>
-  <p>Bei Ihnen im Viertel wurde ein Baum auf einem städtischen Grundstück gefällt und nur der Stumpf ist übrig? Kein Baum wird nachgepflanzt? Das interessiert uns!</p>
+  <p>Bei Ihnen im Viertel wurde ein Baum auf einem städtischen Grundstück gefällt und nur der Stumpf ist übrig? Kein Baum wird nachgepflanzt? Das interessiert uns! (<a href="/anleitung">Anleitung: wie nutze ich die Website?</a>)</p>
   <p><img src='/static/js/images/marker-icon-red.png' alt='Roter Marker' />Baum gefällt, noch nicht wieder neu gepflanzt</p>
   <p><img src='/static/js/images/marker-icon-green.png' alt='Grüner Marker' />Baum gefällt und neu gepflanzt</p>
   <p><img src='/static/js/images/marker-icon.png' alt='Blauer Marker' />Vorschlag für einen neuen Baum</p>
-  <p><img src='/static/js/images/marker-icon-pink.png' alt='Blauer Marker' />Baum gefällt, nicht bekannt, ob Neupflanzung erfolgt ist</p>
+  <p><img src='/static/js/images/marker-icon-pink.png' alt='Pinker Marker' />Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist (<a href="#quelle-stadt">Woher kommen diese Punkte?</a>)</p>
   <h2>Die Hintergründe</h2>
   <p>Mit unserer Website wollen wir allen Bürgern und Bürgerinnen die Möglichkeit geben, uns ihre Informationen über gefällte und nicht nachgepflanzte Bäume mitzuteilen. Über dieses „Baumlückenkataster“ können wir dann gezielt kontrollieren, ob angekündigte Ersatzpflanzungen auch wirklich erfolgt sind.</p>
   <p>In Bochum gibt es etwa 40.000 Straßenbäume. In der Vergangenheit wurden wegen knapper Haushaltsmittel viele gefällte Straßenbäume leider nicht nachgepflanzt. Inzwischen gibt es rund 600 verwaiste Baumscheiben. Damit gefällte Straßenbäume künftig sofort nachgepflanzt werden können, wurden auf Initiative der grünen Ratsfraktion die Mittel für Ersatzpflanzungen zu verdoppelt. Die Verwaltung wurde beauftragt den aufgelaufenen Rückstand aus vorhandenen Mitteln in den nächsten drei Jahren aufzuholen. Die grüne Ratsfraktion wird darauf achten, dass dies auch tatsächlich geschieht.</p>
   <p>Ein digitales Baumkataster, in dem alle Straßenbäume erfasst werden sollen, ist seit längerem geplant. Die Grünen im Rat werden sich dafür einsetzen, das für das nächste Jahr ausreichend Mittel zur Verfügung stehen. Das digitale Kataster ist notwendig, um stets einen schnellen und aktuellen Überblick über Bestand, Zustand und erforderliche Ersatzpflanzungen bei den Straßenbäumen zu ermöglichen. Der Aufbau wird allerdings mehrere Jahre dauern.</p>
   <p>Bisher konnten wir erreichen, das auf der Webseite der Stadt Bochum über geplante Baumfällungen vorab informiert wird. Dieses „Baumfällkataster“ ist am besten über die Suche zu finden. Die Informationen müssen allerdings noch viel benutzerfreundlicher dargestellt werden.</p>
-  <p>Ohne politischen Druck besteht die Gefahr, dass der Eifer der Verwaltung bei den Ersatzpflanzungen erlahmt. Finanzielle Engpässe lassen sich bei der schwierigen Haushaltssituation immer finden. Zurzeit wissen viele Einzelne, wo gefällte Bäume nicht nachgepflanzt wurden. Uns fehlt aber ein Gesamtüberblick.</p>
+  <p>Ohne politischen Druck besteht die Gefahr, dass der Eifer der Verwaltung bei den Ersatzpflanzungen erlahmt. Finanzielle Engpässe lassen sich bei der schwierigen Haushaltssituation immer finden. Deswegen: zeigen Sie uns auf http://hier-fehlt-ein-baum.de/ die Stellen wo Sie Bäume vermissen. Gemeinsam erhalten wir so eine Übersicht, mit der wir dann bei der Verwaltung nachfragen können.</p>
+  <h2 id="quelle-stadt">Datenquelle Stadt Bochum</h2>
+  <p>Die Stadt Bochum veröffentlicht <a href="http://gis.bochum.de/ASWeb/ASC_URL/GISConnectorRIA.do?VERSION=1.0&PROJECT=InternetPortal&APPLID=0&USER=baum&PWD=baum">auf ihrem GIS-Portal</a> seit dem November 2013 einige Baumfällungen. Diese werden hier unter der Kategorie "Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist" eingepflegt. Wir laden Sie herzlich ein dort einmal nachzuschauen.</p>
   <h2>Die Technik</h2>
-  <p>Bei hier-fehlt-ein-baum.de handelt es sich um ein OpenData und OpenSource Projekt mit einer offenen API. Details hierzu finden sich <a href="/api">auf einer separaten Seite.</a></p>
+  <p>Bei hier-fehlt-ein-baum.de handelt es sich um ein OpenData und OpenSource Projekt mit einer offenen API. Details hierzu finden sich <a href="/api">auf einer separaten Seite.</a> Dort ist u.a. auch beschrieben wie die Stadt-Daten abgerufen wurden.</p>
 </div>
 {% endblock %}

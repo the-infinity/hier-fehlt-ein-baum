@@ -6,7 +6,7 @@ from flask.ext.mail import Message
 from models import *
 from forms import *
 import models, util
-import json, time, os
+import json, time, os, datetime
 from subprocess import call
 from sqlalchemy import or_
 
@@ -59,7 +59,9 @@ def tree_details():
     'lat': tree.lat,
     'lng': tree.lng,
     'chop_reason': tree.chop_reason,
-    'type': tree.type
+    'type': tree.type,
+    'source': tree.source,
+    'tree_type_old': tree.tree_type_old
   }
   ret = {
     'status': 0,
@@ -83,6 +85,9 @@ def new_tree():
     tree_form.populate_obj(tree)
     tree.city = 'Bochum'
     tree.public = 0
+    tree.source = 'Nutzer'
+    tree.created_at = datetime.datetime.now()
+    tree.modified_at = datetime.datetime.now()
     db.session.add(tree)
     db.session.commit()
     msg = Message(recipients=["mail@ernestoruge.de"],
@@ -110,6 +115,7 @@ def tree_suggest():
     tree_suggest.tree_id = int(request.args.get('id'))
     tree_suggest.field = request.args.get('field')
     tree_suggest.value = request.args.get('value')
+    tree_suggest.created_at = datetime.datetime.now()
   except ValueError:
     abort(500)
   db.session.add(tree_suggest)
@@ -140,6 +146,10 @@ def impressum():
 @app.route("/api")
 def api():
   return render_template('api.html')
+
+@app.route("/anleitung")
+def anleitung():
+  return render_template('anleitung.html')
 
 @app.route("/admin")
 @basic_auth.required

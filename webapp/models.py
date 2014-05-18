@@ -32,6 +32,7 @@ class Tree(db.Model):
   tree_type_old = db.Column(db.String(255))
   tree_type_new = db.Column(db.String(255))
   chop_reason = db.Column(db.String(255))
+  source = db.Column(db.String(255))
   
   tree_suggest = db.relationship('TreeSuggest', backref='tree', lazy='dynamic')
   
@@ -49,6 +50,7 @@ class TreeSuggest(db.Model):
   tree_id = db.Column(db.Integer(), db.ForeignKey('tree.id'))
   field = db.Column(db.String(255))
   value = db.Column(db.String(255))
+  created_at = db.Column(db.DateTime())
   
   def __init__(self):
     pass

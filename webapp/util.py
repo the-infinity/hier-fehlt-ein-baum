@@ -62,10 +62,9 @@ def sync_gis():
       new_tree.public = 1
       new_tree.postalcode = ''
       new_tree.type = 4
+      new_tree.source = 'Stadt Bochum'
       db.session.add(new_tree)
       db.session.commit()
-  #print utm.to_latlon(374050.00569999963, 5705060.091499999, 32, 'U')
-  #print data['features']
 
 
 def geocode(location_string):
