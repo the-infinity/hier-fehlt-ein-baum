@@ -79,7 +79,7 @@ h2 {
   cursor: pointer;
 }
 
-#report-change input, #report-change select {
+#report-change input, #report-change select, #report-image input, #report-image select {
   background-color: transparent;
   border: 1px solid #999999;
   margin-top: 3px;

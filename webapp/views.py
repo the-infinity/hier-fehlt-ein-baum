@@ -107,19 +107,30 @@ def new_tree():
     return redirect("/")
   return render_template('new-tree.html', tree_form=tree_form)
 
-@app.route("/tree-suggest")
+@app.route('/tree-suggest', methods=['GET', 'POST'])
 def tree_suggest():
   start_time = time.time()
   tree_suggest = TreeSuggest()
   try:
     tree_suggest.tree_id = int(request.args.get('id'))
     tree_suggest.field = request.args.get('field')
-    tree_suggest.value = request.args.get('value')
+    if tree_suggest.field == 'picture':
+      tree_suggest.value = 0
+    else:
+      tree_suggest.value = request.args.get('value')
     tree_suggest.created_at = datetime.datetime.now()
-  except ValueError:
+  except ValueError, TypeError:
     abort(500)
   db.session.add(tree_suggest)
   db.session.commit()
+  if tree_suggest.field == 'picture' and request.files['picture'].filename:
+    image_data = request.files['picture'].read()
+    # write new image data
+    open(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '.jpg'), 'w').write(image_data)
+    call(['/usr/bin/convert', '-resize', '270x270', os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '.jpg'), os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '-small.jpg')])
+    tree_suggest.value = 1
+    db.session.add(tree_suggest)
+    db.session.commit()
   ret = {
     'status': 0,
     'duration': round((time.time() - start_time) * 1000),

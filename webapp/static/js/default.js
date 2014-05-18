@@ -74,7 +74,8 @@ function get_trees() {
           else
             html += '<p id="report-image"><span>Bild vorschlagen</span></p>';
           html += '<h3>Grund für die Fällung</h3><p>' + tree['chop_reason'] + '</p>';
-          html += '<h3>Gefällte Bäume</h3><p>' + tree['tree_type_old'] + '</p>';
+          if (tree['tree_type_old'])
+            html += '<h3>Gefällte Bäume</h3><p>' + tree['tree_type_old'] + '</p>';
           html += '<h3>Beschreibung</h3><p>' +  tree['descr'] + '</p>';
           html += '<h3>Datenquelle</h3><p>' + tree['source'] + '</p>';
           $('#details').html(html);
@@ -97,17 +98,21 @@ function get_trees() {
             });
           });
           $('#report-image span').click(function() {
-            html = 'Ich schlage folgendes Bild vor:<br/><form method="post" enctype="multipart/form-data"><input type="" /></form>';
-            $("#report-change").html(html);
-            $('#report-change form').submit(function(event) {
+            html = 'Ich schlage folgendes Bild vor:<br/><form enctype="multipart/form-data"><input type="file" name="picture" /><input type="submit" value="absenden" /></form>';
+            $("#report-image").html(html);
+            $('#report-image form').submit(function(event) {
               event.preventDefault();
-              data = {
-                'id': current_tree_id,
-                'field': 'type',
-                'value': $('#report-change select').val()
-              }
-              $.get('/tree-suggest', data, function() {
-                $("#report-change").html('Status-Vorschlag erfolgreich gesendet. Danke für die Rückmeldung!');
+              data = 
+              $.ajax({
+                url: '/tree-suggest?picture=1&field=picture&id=' + current_tree_id,
+                type: 'POST',
+                data: new FormData($('form')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function() {
+                  $("#report-image").html('Bild-Vorschlag erfolgreich gesendet. Danke für die Rückmeldung!');
+                }
               });
             });
           });
