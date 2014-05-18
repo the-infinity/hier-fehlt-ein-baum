@@ -32,6 +32,13 @@
   'type': Status des Baums, Integer 0-4
 }
   </pre></p>
-  <p></p>
+  <h2>Datenquelle Stadt Bochum</h2>
+  <p>Die Stadt Bochum verwendet wie andere Kommunen auch <a href="http://gis.bochum.de/ASWeb/ASC_URL/GISConnectorRIA.do?VERSION=1.0&PROJECT=InternetPortal&APPLID=0&USER=baum&PWD=baum">die Software ArcGIS</a>. Diese liefert nicht nur Kartenmaterial, sondern auch Rohdaten im JSON Format aus. Das URL Layout sieht wie folgt aus:</p>
+  <pre>
+GIS_URL_COOKIE = 'http://gis.bochum.de/ASWeb/ASC_URL/GISConnectorRIA.do?VERSION=1.0&PROJECT=InternetPortal&APPLID=0&USER=baum&PWD=baum'
+GIS_URL_DATA = 'https://gis.bochum.de/ASWeb/ASC_RIA/gpproxy.jsp?http://vb2k8gis02:8399/arcgis/rest/services/Baumfaellkataster/MapServer/0/query?where=OBJECTID+IS+NOT+NULL&returnGeometry=true&outFields=*&f=json'
+  </pre>
+  <p>Man benötigt das Cookie von GIS_URL_COOKIE um die Daten unter GIS_URL_DATA abrufen zu können.</p>
+  <p>Die dort befindlichen Koordinaten sind keine üblichen geographischen Längen / Breiten, sondern im <a href="http://de.wikipedia.org/wiki/World_Geodetic_System_1984">World Geodetic System 1984</a>. Umwandeln lassen sich Diese u.a. <a href="https://pypi.python.org/pypi/utm">mit dem Python-Modul utm</a>.</p>
 </div>
 {% endblock %}

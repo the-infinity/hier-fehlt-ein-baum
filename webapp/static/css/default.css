@@ -1,4 +1,21 @@
 
+#logo {
+  float: right;
+  color: #FFFFFF;
+  margin-bottom: 0;
+}
+
+#logo span {
+  display: block;
+  float: left;
+  margin-top: 4px;
+  padding-right: 8px;
+}
+
+#logo img {
+  margin-top: -3px;
+}
+
 #navbar a, navbar a:hover {
   color: #FFFFFF;
 }
@@ -163,7 +180,24 @@ select {
   font-size: 20px;
 }
 
-@media (min-width: 350px) and (max-width: 500px) {
+@media (min-width: 500px) and (max-width: 700px) {
+  #logo {
+    display: none;
+  }
+}
+
+
+@media (min-width: 400px) and (max-width: 500px) {
+  #logo, #tutorial {
+    display: none;
+  }
+}
+
+@media (min-width: 350px) and (max-width: 400px) {
+  #logo, #tutorial {
+    display: none;
+  }
+  
   .navbar ul {
     font-size: 16px;
     height: 15px;
@@ -174,8 +208,11 @@ select {
   }
 }
 
-
 @media (max-width: 350px) {
+  #logo {
+    display: none;
+  }
+  
   .navbar ul {
     font-size: 12px;
     height: 10px;
