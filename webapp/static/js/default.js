@@ -7,6 +7,13 @@ var RedIcon;
 var redIcon = null;
 var PinkIcon;
 var pinkIcon = null;
+var type_values = Array(
+  'bitte auswählen',
+  'Baum wurde gefällt und noch nicht wieder neu gepflanzt',
+  'Baum gefällt und neu gepflanzt',
+  'Vorschlag für einen neuen Baum',
+  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist');
+var current_tree_id = null;
 
 $(document).ready(function() {
   if ($('#map').exists()) {
@@ -37,7 +44,6 @@ function get_trees() {
     else
       markers.clearLayers();
     $.each(result['response'], function(key, tree) {
-      console.log(tree);
       if (tree['type'] == 1)
         marker = L.marker([tree['lat'], tree['lng']], {icon: redIcon, title: tree.id});
       else if (tree['type'] == 2)
@@ -54,22 +60,37 @@ function get_trees() {
         
         current_marker_id = current_marker['target']['options']['title'];
         $.getJSON('/tree-details?id=' + current_marker_id, function(result) {
-          $("#details").animate({width:"290px", 'padding-left': '10px', 'padding-right': '10px'});
+          $("#details").animate({width:"290px"});
           tree = result['response'];
-          status = '';
-          if (tree['type'] == 1)
-            status = 'Baum gefällt, noch nicht wieder neu gepflanzt';
-          else if (tree['type'] == 2)
-            status = 'Baum gefällt und neu gepflanzt';
-          else if (tree['type'] == 3)
-            status = 'Vorschlag für einen neuen Baum';
-          else if (tree['type'] == 4)
-            status = 'Baum gefällt, nicht bekannt, ob Neupflanzung erfolgt ist';
-          var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span><h2>Details</h2><p>' + status + '</p><p>Adresse:<br />' + tree['address'] + ',<br />' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
+          current_tree_id = tree['id'];
+          var html = '<span id="close-sidebar" onclick="close_sidebar();">schließen</span>';
+          html += '<h2>Details</h2>';
+          html += '<h3>Status</h3><p>' + type_values[tree['type']] + '</p>'
+          html += '<p id="report-change"><span>Änderung melden</span></p>';
+          html += '<h3>Adresse</h3><p>' + tree['address'] + ', ' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
           if (tree['picture'] == 1)
             html += '<a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a>';
-          html += '<p>Grund für die Fällung:<br />' + tree['chop_reason'] + '</p><p>Beschreibung:<br />' +  tree['descr'] + '</p>'
-          $("#details").html(html);
+          html += '<h3>Grund für die Fällung</h3><p>' + tree['chop_reason'] + '</p>';
+          html += '<h3>Beschreibung</h3><p>' +  tree['descr'] + '</p>'
+          $('#details').html(html);
+          $('#report-change span').click(function() {
+            html = 'Der Status hat sich wie folgt geändert:<br/><form><select>';
+            for (i=0; i < type_values.length; i++)
+              html += '<option value="' + i + '">' + type_values[i] + '</option>';
+            html += '</select><input type="submit" value="absenden" /></form>';
+            $("#report-change").html(html);
+            $('#report-change form').submit(function(event) {
+              event.preventDefault();
+              data = {
+                'id': current_tree_id,
+                'field': 'type',
+                'value': $('#report-change select').val()
+              }
+              $.get('/tree-suggest', data, function() {
+                $("#report-change").html('Status-Vorschlag erfolgreich gesendet. Danke für die Rückmeldung!');
+              });
+            });
+          });
         });
       });
       markers.addLayer(marker);

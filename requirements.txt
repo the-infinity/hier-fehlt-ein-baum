@@ -1,6 +1,10 @@
-translitcodec
 gunicorn
 Flask
-Flask-Security
+Flask-Bootstrap
+Flask-Mail
 Flask-SQLAlchemy
 Flask-MySQL
+Flask-BasicAuth
+utm
+python-memcached
+requests

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div id="content-tree-api" class="content-text">
+  <h1>API &amp; Open Source</h1>
+  <p>Das Projekt hier-fehlt-ein-baum.de ist OpenSource Software. Es basiert auf dem Python-Web-Framework Flask und benötigt eine MySQL Datenbank. Die Quelldaten <a href="https://github.com/the-infinity/hier-fehlt-ein-baum/">liegen auf Github</a>, Patches sind willkommen.</p>
+  <p>Die Daten von hier-fehlt-ein-baum.de sind über eine offene Schnittstelle (API) abrufbar. Alle von den Nutzern generierten Informationen sind gemeinfrei, die von der Stadt importierten Daten müssten auch gemeinfrei sein, wir können dazu aber keine 100% sichere Aussage treffen, da dies Bestandteil aktieller Gerichtsverfahren ist. Die Rechtslage sieht allerdings gut für die Weiterverwendung aus, <a href="https://netzpolitik.org/2014/zensurheberrecht-fragdenstaat-verklagt-die-bundesrepublik-und-gewinnt-ohne-es-zu-wissen/">wenn man sich aktuelle Entwicklungen anschaut.</a></p>
+  <p>Die Liste aller Bäume erhält man unter /tree-list, welches ein JSON zurückgibt:</p>
+  <p><pre>
+[
+  {
+    'id': ID des Baums, Integer
+    'type': Status des Baums, Integer 0-4
+    'lat': Geographische Breite, Float
+    'lon': Geographische Länge, Float
+  },
+  ...
+]
+  </pre></p>
+  <p>Mit der ID kann man dann weitere Informationen zu den einzelnen Bäume abfragen. Unter /tree-details?id=BAUM_ID erhält man folgendes JSON</p>
+  <p><pre>
+{
+  'id': ID des Baums, Integer
+  'address': Straße und Hausnummer, String(255)
+  'postalcode': Postleitzahl, String(5)
+  'city': Stadt, String(255)
+  'descr': Beschreibung, String(35000)
+  'picture': Bild unter /static/img/tree/BAUM_ID.jpg bzw /static/img/tree/BAUM_ID_small.jpg vorhanden, Integer 0-1
+  'lat': Geographische Breite, Float
+  'lng': Geographische Breite, Länge
+  'chop_reason': Begründung des Abholzens seitens Verwaltung, String(255)
+  'type': Status des Baums, Integer 0-4
+}
+  </pre></p>
+  <p></p>
+</div>
+{% endblock %}

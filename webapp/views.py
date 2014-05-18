@@ -45,7 +45,7 @@ def tree_list():
 def tree_details():
   start_time = time.time()
   try:
-    tree_id = id=int(request.args.get('id'))
+    tree_id = int(request.args.get('id'))
   except ValueError:
     abort(500)
   tree = Tree.query.filter_by(id=tree_id).first_or_404()
@@ -102,11 +102,44 @@ def new_tree():
     return redirect("/")
   return render_template('new-tree.html', tree_form=tree_form)
 
+@app.route("/tree-suggest")
+def tree_suggest():
+  start_time = time.time()
+  tree_suggest = TreeSuggest()
+  try:
+    tree_suggest.tree_id = int(request.args.get('id'))
+    tree_suggest.field = request.args.get('field')
+    tree_suggest.value = request.args.get('value')
+  except ValueError:
+    abort(500)
+  db.session.add(tree_suggest)
+  db.session.commit()
+  ret = {
+    'status': 0,
+    'duration': round((time.time() - start_time) * 1000),
+    'request': {},
+    'response': True
+  }
+  json_output = json.dumps(ret, cls=util.MyEncoder, sort_keys=True)
+  response = make_response(json_output, 200)
+  response.mimetype = 'application/json'
+  response.headers['Pragma'] = 'no-cache'
+  response.headers['Expires'] = -1
+  response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+  return(response)
 
 
 @app.route("/information")
 def information():
   return render_template('information.html')
+
+@app.route("/impressum")
+def impressum():
+  return render_template('impressum.html')
+
+@app.route("/api")
+def api():
+  return render_template('api.html')
 
 @app.route("/admin")
 @basic_auth.required
