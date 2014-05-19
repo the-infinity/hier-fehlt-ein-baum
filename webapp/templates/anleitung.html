@@ -3,6 +3,14 @@
 {% block content %}
 <div id="content-tree-info" class="content-text">
   <h1>Anleitung</h1>
-  <p>Kommt noch.</p>
+  <p>Ziel der Seite ist die Erfassung gefällter Straßenbäume (siehe auch <a href="/information">'Infos'</a>). Jede Markierung auf der Karte stellt einen Standort dar, an dem Bäume gefällt wurden. Dazu kommen Markierungen für Standorte, an denen Straßenbäume stehen sollten.</p>
+  <p><img src='/static/js/images/marker-icon-red.png' alt='Roter Marker' />Baum gefällt, noch nicht wieder neu gepflanzt</p>
+  <p><img src='/static/js/images/marker-icon-green.png' alt='Grüner Marker' />Baum gefällt und neu gepflanzt</p>
+  <p><img src='/static/js/images/marker-icon.png' alt='Blauer Marker' />Vorschlag für einen neuen Baum</p>
+  <p><img src='/static/js/images/marker-icon-pink.png' alt='Pinker Marker' />Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist (<a href="#quelle-stadt">Woher kommen diese Punkte?</a>)</p>
+  <p><img src='/static/js/images/marker-icon-lightgreen.png' alt='Hellgrüner Marker' />Neupflanzung nicht möglich oder sinnvoll</p>
+  <p>Klicken Sie auf einen der Marker, um mehr über den (ehemaligen) Baumstandort zu erfahren. Sie können eine Änderung des Status mitteilen und ein Foto zu dem Standort hochladen.</p>
+  <p>Mit <a href="/new-tree">'Neuer Baum'</a> können Sie einen neuen Standort hinzufügen. Ganz wichtig ist die Angabe einer Adresse in der Nähe des Standortes. Mit dieser Information wird der Standort auf der Karte mit einem Marker gekennzeichnet. Die Markerposition können Sie auf der Karte korrigieren. Sie können ein Foto zur Verfügung zu stellen.</p>
+  <p>Mit <a href="/">'Start'</a> kommen Sie jederzeit auf die Anfangsdarstellung der Karte zurück.</p>
 </div>
 {% endblock %}

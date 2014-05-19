@@ -30,7 +30,7 @@ class NewTree(Form):
     validators=[validators.Required(), validators.Length(max=255)],
     description=u'Straße und Hausnummer in Bochum zur Lokalisierung')
   descr = TextAreaField(
-    label=u'Zusatzinfornationen',
+    label=u'Zusatzinformationen',
     validators=[validators.Required(), validators.Length(max=32000)],
     description='')
   picture = FileField(
