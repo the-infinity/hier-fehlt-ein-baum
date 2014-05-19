@@ -16,5 +16,16 @@
     {% endif %}
   {% endwith %}
   <div id="map"></div>
-  <div id="details"></div>
+  <div id="details">
+    <span id="close-sidebar" onclick="close_sidebar();">schließen</span>
+    <h2>Willkommen!</h2>
+    <p>Bei Ihnen im Viertel wurde ein Straßenbaum gefällt und nur der Stumpf ist übrig? Kein Baum wird nachgepflanzt? Das interessiert uns!</p>
+    <div>
+      <p style="background-image: url('/static/js/images/marker-icon-red.png');">Baum gefällt, noch nicht wieder neu gepflanzt</p>
+      <p style="background-image: url('/static/js/images/marker-icon-green.png');">Baum gefällt und neu gepflanzt</p>
+      <p style="background-image: url('/static/js/images/marker-icon-lightgreen.png');">Neupflanzung nicht möglich oder sinnvoll</p>
+      <p style="background-image: url('/static/js/images/marker-icon.png');">Vorschlag für einen neuen Baum</p>
+      <p style="background-image: url('/static/js/images/marker-icon-pink.png');">Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist (<a href="#quelle-stadt">Woher kommen diese Punkte?</a>)</p>
+    </div>
+  </div>
 {% endblock %}
