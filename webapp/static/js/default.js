@@ -31,6 +31,15 @@ $(document).ready(function() {
       attribution: 'Map Data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>.'
     });
     map.setView(new L.LatLng(51.481845, 7.216236), 13).addLayer(backgroundLayer);
+    $.getJSON('/static/js/bochum.json', function(result) {
+      route = L.geoJson(result, {
+        style: {
+          'color': "#000000",
+          'weight': 2,
+          'opacity': 0.65
+        }
+      }).addTo(map);
+    });
     get_trees();
   }
 });

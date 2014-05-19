@@ -90,9 +90,9 @@ def new_tree():
     tree.modified_at = datetime.datetime.now()
     db.session.add(tree)
     db.session.commit()
-    msg = Message(recipients=["mail@ernestoruge.de"],
-      sender="mail@ernestoruge.de",
-      body=u"Freischalten nötig.",
+    msg = Message(recipients=app.config['INFO_MAIL_RECIPIENTS'],
+      sender=app.config['INFO_MAIL_SENDER'],
+      body=u"ID: %s" % tree.id,
       subject=u"Neuer Baum wurde eingereicht")
     mail.send(msg)
     if request.files['picture'].filename:
@@ -123,6 +123,11 @@ def tree_suggest():
     abort(500)
   db.session.add(tree_suggest)
   db.session.commit()
+  msg = Message(recipients=app.config['INFO_MAIL_RECIPIENTS'],
+    sender=app.config['INFO_MAIL_SENDER'],
+    body=u"ID: %s\nFeld: %s" % (tree_suggest.tree_id, tree_suggest.field),
+    subject=u"Neuer Änderungsvorschlag wurde eingereicht")
+  mail.send(msg)
   if tree_suggest.field == 'picture' and request.files['picture'].filename:
     image_data = request.files['picture'].read()
     # write new image data
