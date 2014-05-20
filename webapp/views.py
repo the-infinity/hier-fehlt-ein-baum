@@ -196,6 +196,12 @@ def admin():
   trees = Tree.query.all()
   return render_template('admin.html', trees=trees)
 
+@app.route("/admin/suggest")
+@basic_auth.required
+def admin_suggest():
+  tree_suggestions = TreeSuggest.query.all()
+  return render_template('admin_suggest.html', tree_suggestions=tree_suggestions)
+
 @app.route("/admin-action")
 @basic_auth.required
 def admin_action():
@@ -242,6 +248,12 @@ def admin_action():
   response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
   return response
   
+@app.route('/admin/picture-suggest')
+@basic_auth.required
+def admin_picture_suggest():
+  pass
+
+
 @app.route("/geocode")
 def geocode():
   start = time.time()

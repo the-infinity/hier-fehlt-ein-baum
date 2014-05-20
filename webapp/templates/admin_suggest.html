@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('.static', filename='js/admin.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="content-admin" class="content-text">
+  <h1>Admin-Interface</h1>
+  <table class="visible sortable table">
+    <thead>
+      <tr>
+        <th>Baum-ID</th>
+        <th>Änderung von</th>
+        <th>Alter Wert</th>
+        <th>Neuer Wert</th>
+        <th>Funktionen</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Baum-ID</th>
+        <th>Änderung von</th>
+        <th>Alter Wert</th>
+        <th>Neuer Wert</th>
+        <th>Funktionen</th>
+      </tr>
+    </tfoot>
+    <tbody>
+      {% for tree_suggest in tree_suggestions %}
+      <tr>
+        <td>{{ tree_suggest.tree_id }}</td>
+        <td>{{ tree_suggest.field }}</td>
+        {% if tree_suggest.field == 'type' %}
+          <td><img src="/static/js/images/{{ tree_suggest.tree.type|deref_type }}" /></td>
+          <td><img src="/static/js/images/{{ tree_suggest.value|deref_type }}" /></td>
+        {% elif tree_suggest.field == 'picture' %}
+          <td class="admin-picture">{% if tree_suggest.tree.picture %}<span>zeigen<img src="/static/img/tree/{{ tree_suggest.tree_id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
+          <td class="admin-picture">{% if tree_suggest.value %}<span>zeigen<img src="/static/img/tree/{{ tree_suggest.tree_id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
+        {% else %}
+          <td>{{ tree_suggest.value }}</td>
+          <td>{{ tree_suggest.tree.type }}</td>
+        {% endif %}
+        <td></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</div>
+{% endblock %}

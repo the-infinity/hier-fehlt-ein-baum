@@ -33,12 +33,7 @@
       {% for tree in trees %}
       <tr>
         <td>{{ tree.id }}</td>
-        <td>
-          {% if tree.type == 1 %}<img src="/static/js/images/marker-icon-red.png" />{% endif %}
-          {% if tree.type == 2 %}<img src="/static/js/images/marker-icon-green.png" />{% endif %}
-          {% if tree.type == 3 %}<img src="/static/js/images/marker-icon.png" />{% endif %}
-          {% if tree.type == 4 %}<img src="/static/js/images/marker-icon-pink.png" />{% endif %}
-        </td>
+        <td><img src="/static/js/images/{{ tree.type|deref_type }}" /></td>
         <td>{{ tree.address }}</td>
         <td>{{ tree.descr }}</td>
         <td class="admin-picture">{% if tree.picture %}<span>zeigen<img src="/static/img/tree/{{ tree.id }}-small.jpg" /></span>{% else %}-{% endif %}</td>

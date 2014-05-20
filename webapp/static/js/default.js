@@ -11,9 +11,9 @@ var type_values = Array(
   'bitte auswählen',
   'Baum wurde gefällt und noch nicht wieder neu gepflanzt',
   'Baum gefällt und neu gepflanzt',
+  'Neupflanzung nicht möglich oder sinnvoll',
   'Vorschlag für einen neuen Baum',
-  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist',
-  'Neupflanzung nicht möglich oder sinnvoll');
+  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist');
 var current_tree_id = null;
 
 $(document).ready(function() {

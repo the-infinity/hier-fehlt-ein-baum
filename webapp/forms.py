@@ -3,7 +3,7 @@
 from flask.ext.wtf import Form
 from wtforms import validators
 from models import *
-from wtforms import SubmitField, TextField, SelectField, FileField, TextAreaField, HiddenField
+from wtforms import SubmitField, TextField, SelectField, FileField, TextAreaField, HiddenField, BooleanField
 from webapp import app, db
 import util
 
@@ -45,7 +45,6 @@ class NewTree(Form):
   postalcode = HiddenField(
     validators=[validators.Required()],
   )
-  
   submit = SubmitField(
     label=u'Daten speichern')
   

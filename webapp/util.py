@@ -151,6 +151,13 @@ def obscuremail(mailaddress):
   return mailaddress.replace('@', '__AT__').replace('.', '__DOT__')
 app.jinja_env.filters['obscuremail'] = obscuremail
 
+def deref_type(type_id):
+  type_id = int(type_id)
+  if type_id >= 0 and type_id <= 5:
+    return app.config['MARKER_DEF'][type_id]
+  else:
+    return ''
+app.jinja_env.filters['deref_type'] = deref_type
 
 class MyEncoder(json.JSONEncoder):
   def default(self, obj):
