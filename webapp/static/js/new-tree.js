@@ -36,7 +36,7 @@ $(document).ready(function() {
     }
     
     // Wenn Mobilbrowser: GPS Position nutzen + Deaktivieren der Photo-Funktion ermöglichen
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 1) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       $('<p id="picture-cam-toggle" onclick="picture_cam_toggle();">Kamera-Funktion deaktivieren</p>').insertAfter($('#picture').parent().children('input'));
       $('#picture').parent().children('p').children('span').click(function() {
         console.log('meeeeh');
