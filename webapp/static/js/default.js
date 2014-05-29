@@ -1,19 +1,24 @@
 
 var map;
 var markers;
+
+// Icons
 var GreenIcon;
 var greenIcon = null;
 var RedIcon;
 var redIcon = null;
 var PinkIcon;
 var pinkIcon = null;
+var LightgreenIcon;
+var lightgreenIcon = null;
+
 var type_values = Array(
   'bitte auswählen',
   'Baum wurde gefällt und noch nicht wieder neu gepflanzt',
   'Baum gefällt und neu gepflanzt',
-  'Neupflanzung nicht möglich oder sinnvoll',
   'Vorschlag für einen neuen Baum',
-  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist');
+  'Baum wurde gefällt, es ist nicht bekannt, ob Neupflanzung erfolgt ist',
+  'Neupflanzung nicht möglich oder sinnvoll');
 var current_tree_id = null;
 
 $(document).ready(function() {
@@ -24,6 +29,9 @@ $(document).ready(function() {
     redIcon = new RedIcon();
     var PinkIcon = L.Icon.Default.extend({ options: { iconUrl: '/static/js/images/marker-icon-pink.png' } });
     pinkIcon = new PinkIcon();
+    var LightgreenIcon = L.Icon.Default.extend({ options: { iconUrl: '/static/js/images/marker-icon-lightgreen.png' } });
+    lightgreenIcon = new LightgreenIcon();
+    
     map = new L.Map('map', {});
     var backgroundLayer = new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
       maxZoom: 18,
@@ -58,12 +66,12 @@ function get_trees() {
         marker = L.marker([tree['lat'], tree['lng']], {icon: redIcon, title: tree.id});
       else if (tree['type'] == 2)
         marker = L.marker([tree['lat'], tree['lng']], {icon: greenIcon, title: tree.id});
-      else if (tree['type'] == 3) {
+      else if (tree['type'] == 3)
         marker = L.marker([tree['lat'], tree['lng']], {title: tree.id});
-      }
-      else if (tree['type'] == 4) {
+      else if (tree['type'] == 4)
         marker = L.marker([tree['lat'], tree['lng']], {icon: pinkIcon, title: tree.id});
-      }
+      else if (tree['type'] == 5)
+        marker = L.marker([tree['lat'], tree['lng']], {icon: lightgreenIcon, title: tree.id});
       marker.on('click', function (current_marker) {
         if ($('#flashes').exists())
           $('#flashes').remove();
@@ -82,7 +90,8 @@ function get_trees() {
             html += '<p><a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a></p></p>';
           else
             html += '<p id="report-image"><span>Bild vorschlagen</span></p>';
-          html += '<h3>Grund für die Fällung</h3><p>' + tree['chop_reason'] + '</p>';
+          if (tree['chop_reason'])
+            html += '<h3>Grund für die Fällung</h3><p>' + tree['chop_reason'] + '</p>';
           if (tree['tree_type_old'])
             html += '<h3>Gefällte Bäume</h3><p>' + tree['tree_type_old'] + '</p>';
           html += '<h3>Beschreibung</h3><p>' +  tree['descr'] + '</p>';

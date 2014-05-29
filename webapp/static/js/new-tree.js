@@ -1,6 +1,9 @@
 
 var map;
 var marker = null;
+var address_auto_set = false;
+var lat_lng_auto_set = false;
+
 
 $(document).ready(function() {
   if ($('#new-tree-map').exists()) {
@@ -13,12 +16,80 @@ $(document).ready(function() {
     map.setView(new L.LatLng(51.481845, 7.216236), 13).addLayer(backgroundLayer);
     
     marker = L.marker([51.481845, 7.216236], {draggable: true}).addTo(map);
+    
+    // Anzeigen der Stadtgrenzen
+    $.getJSON('/static/js/bochum.json', function(result) {
+      route = L.geoJson(result, {
+        style: {
+          'color': "#000000",
+          'weight': 2,
+          'opacity': 0.65
+        }
+      }).addTo(map);
+    });
+    
+    // Übernehmen von gespeicherter GPS Position
+    if ($('#lat').val() && $('#lng').val()) {
+      marker.setLatLng([$('#lat').val(), $('#lng').val()]);
+      map.setView([$('#lat').val(), $('#lng').val()]);
+      map.setZoom(17);
+    }
+    
+    // Wenn Mobilbrowser: GPS Position nutzen + Deaktivieren der Photo-Funktion ermöglichen
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 1) {
+      $('<p id="picture-cam-toggle" onclick="picture_cam_toggle();">Kamera-Funktion deaktivieren</p>').insertAfter($('#picture').parent().children('input'));
+      $('#picture').parent().children('p').children('span').click(function() {
+        console.log('meeeeh');
+      });
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          if (position.coords.latitude && position.coords.longitude) {
+            marker.setLatLng([position.coords.latitude, position.coords.longitude]);
+            map.setView([position.coords.latitude, position.coords.longitude]);
+            map.setZoom(17);
+            data = {
+              'lat': position.coords.latitude,
+              'lng': position.coords.longitude
+            }
+            $.getJSON('/geocode', data, function(result) {
+              result = filterGeocodingChoices(result['result']);
+              if (result.length >= 1) {
+                result = result[0];
+                $('#postalcode').val(result['address']['postcode']);
+                $('#address').val(result['address']['road']);
+                address_auto_set = true;
+              }
+            });
+          }
+        });
+      }
+    }
+    
+    // Verschieben des Markers
     marker.on('dragend', function() {
       $('#lat').val(marker.getLatLng()['lat']);
       $('#lng').val(marker.getLatLng()['lng']);
+      // Straße herausfinden wenn Straße noch nicht gesetzt
+      if (!$('#address').val() || address_auto_set) {
+        data = {
+          'lat': marker.getLatLng()['lat'],
+          'lng': marker.getLatLng()['lng']
+        }
+        $.getJSON('/geocode', data, function(result) {
+          result = filterGeocodingChoices(result['result']);
+          if (result.length >= 1) {
+            result = result[0];
+            $('#postalcode').val(result['address']['postcode']);
+            $('#address').val(result['address']['road']);
+            address_auto_set = true;
+          }
+        });
+      }
     });
     
+    // Eintragen einer Straße
     $('#address').on('change', function() {
+      address_auto_set = false;
       if ($('#address').val()) {
         data = {
           'address': $('#address').val()
@@ -30,6 +101,7 @@ $(document).ready(function() {
             $('#lat').val(result['lat']);
             $('#lng').val(result['lon']);
             $('#postalcode').val(result['address']['postcode']);
+            lat_lng_auto_set = true;
             marker.setLatLng([result['lat'], result['lon']]);
             map.setView([result['lat'], result['lon']]);
             map.setZoom(17);
@@ -87,6 +159,17 @@ function filterGeocodingChoices(results) {
   // Sortieren nach Längengrad
   ret.sort(longitudeSort);
   return ret;
+}
+
+function picture_cam_toggle() {
+  if ($('#picture').attr('capture') !== undefined) {
+    $('#picture').removeAttr('capture');
+    $('#picture-cam-toggle').text('Kamera-Funktion aktivieren');
+  }
+  else {
+    $('#picture').attr({'capture': ''});
+    $('#picture-cam-toggle').text('Kamera-Funktion deaktivieren');
+  }
 }
 
 function longitudeSort(a, b) {

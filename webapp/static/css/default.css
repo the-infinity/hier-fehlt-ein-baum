@@ -196,6 +196,19 @@ select {
   font-size: 20px;
 }
 
+.error {
+  color: #A94442;
+}
+
+.help-block a {
+  color: #737373;
+}
+
+#picture-cam-toggle {
+  margin: 5px 0px;
+  font-style: italic;
+}
+
 @media (min-width: 500px) and (max-width: 700px) {
   #logo {
     display: none;

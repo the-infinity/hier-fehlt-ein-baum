@@ -89,26 +89,14 @@ def sync_gis():
       db.session.add(new_tree)
       db.session.commit()
 
-
 def geocode(location_string):
   """
-  Löst eine Straßen- und optional PLZ-Angabe zu einer Geo-Postion
-  auf. Beispiel: "Straßenname (12345)"
+  Löst eine Straßen- oder Lat,Lon-Angabe zu einer Geo-Postion auf.
   """
-  postal = None
-  street = location_string.encode('utf-8')
-  postalre = re.compile(r'(.+)\s+\(([0-9]{5})\)')
-  postal_matching = re.match(postalre, street)
-  postal = None
-  if postal_matching is not None:
-    street = postal_matching.group(1)
-    postal = postal_matching.group(2)
+  location_string = location_string.encode('utf-8')
   url = 'http://open.mapquestapi.com/nominatim/v1/search.php'
-  city = app.config['GEOCODING_DEFAULT_CITY']
-  if type(city) == unicode:
-    city = city.encode('utf8')
   params = {'format': 'json',  # json
-            'q': ', '.join([street, city]),
+            'q': location_string,
             'addressdetails': 1,
             'accept-language': 'de_DE',
             'countrycodes': app.config['GEOCODING_DEFAULT_COUNTRY']}
@@ -116,7 +104,6 @@ def geocode(location_string):
   response = request.read()
   addresses = json.loads(response)
   addresses_out = []
-  print addresses
   for address in addresses:
     for key in address.keys():
       if key in ['address', 'boundingbox', 'lat', 'lon', 'osm_id']:
@@ -127,9 +114,6 @@ def geocode(location_string):
       continue
     if address['address']['county'] != app.config['GEOCODING_FILTER_COUNTY']:
       continue
-    if postal is not None:
-      if 'postcode' in address['address'] and address['address']['postcode'] != postal:
-        continue
     addresses_out.append(address)
   return addresses_out
 

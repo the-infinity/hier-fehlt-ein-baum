@@ -259,10 +259,16 @@ def geocode():
   start = time.time()
   jsonp_callback = request.args.get('callback', None)
   address = request.args.get('address', '')
-  if address == '':
+  lat = request.args.get('lat', '')
+  lng = request.args.get('lng', '')
+  if address == '' and not (lat != '' and lng != ''):
     abort(400)
+  if address:
+    location_string = ', '.join([address, app.config['GEOCODING_DEFAULT_CITY']])
+  else:
+    location_string = ', '.join([lat, lng])
   obj = {
-    'result': util.geocode(address)
+    'result': util.geocode(location_string)
   }
   obj['duration'] = int((time.time() - start) * 1000)
   json_output = json.dumps(obj, sort_keys=True)
