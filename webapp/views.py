@@ -221,7 +221,11 @@ def admin_action():
     setattr(tree, field, value)
     db.session.add(tree)
     db.session.commit()
-  tree_suggest_id = request.args.get('tree_suggest_id', 0)
+  tree_suggest_id = int(request.args.get('tree_suggest_id', 0))
+  if tree_suggest_id and action_type == 'update':
+    if field == 'picture':
+      os.rename(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest_id) + '.jpg'), os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree_id) + '.jpg'))
+      os.rename(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest_id) + '-small.jpg'), os.path.join(app.config['IMAGE_UPLOAD_PATH_BASE'], str(tree_id) + '-small.jpg'))
   if tree_suggest_id:
     tree_suggest = TreeSuggest.query.filter_by(id=tree_suggest_id).first_or_404()
     db.session.delete(tree_suggest)
