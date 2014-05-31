@@ -87,7 +87,7 @@ function get_trees() {
           html += '<h3>Status</h3><p>' + type_values[tree['type']] + '</p>'
           html += '<p id="report-change"><span>Änderung melden</span></p>';
           html += '<h3>Adresse</h3><p>' + tree['address'] + ', ' + tree['postalcode'] + ' ' + tree['city'] + '</p>';
-          html += '<h3>Bild</h3>'
+          html += '<h3 id="image-box">Bild</h3>'
           if (tree['picture'] == 1)
             html += '<p><a href="/static/img/tree/' + tree['id'] + '.jpg" rel="lightbox"><img src="/static/img/tree/' + tree['id'] + '-small.jpg" alt="Bild des Baumes" /></a></p></p>';
           else

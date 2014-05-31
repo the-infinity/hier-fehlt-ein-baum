@@ -209,6 +209,10 @@ select {
   font-style: italic;
 }
 
+#image-box {
+  text-align: center;
+}
+
 @media (min-width: 500px) and (max-width: 700px) {
   #logo {
     display: none;
