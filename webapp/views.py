@@ -159,8 +159,8 @@ def tree_suggest():
   if tree_suggest.field == 'picture' and request.files['picture'].filename:
     image_data = request.files['picture'].read()
     # write new image data
-    open(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '.jpg'), 'w').write(image_data)
-    call(['/usr/bin/convert', '-resize', '270x270', os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '.jpg'), os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.tree_id) + '-small.jpg')])
+    open(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.id) + '.jpg'), 'w').write(image_data)
+    call(['/usr/bin/convert', '-resize', '270x270', os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.id) + '.jpg'), os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(tree_suggest.id) + '-small.jpg')])
     tree_suggest.value = 1
     db.session.add(tree_suggest)
     db.session.commit()
@@ -247,7 +247,6 @@ def admin_picture_suggest():
   size = request.args.get('size', '')
   if size:
     size = '-' + size
-  size = ''
   if image_id:
     return send_file(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(image_id) + size + '.jpg'), mimetype='image/jpeg')
   else:
