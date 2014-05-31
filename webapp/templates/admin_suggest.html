@@ -37,12 +37,15 @@
           <td><img src="/static/js/images/{{ tree_suggest.value|deref_type }}" /></td>
         {% elif tree_suggest.field == 'picture' %}
           <td class="admin-picture">{% if tree_suggest.tree.picture %}<span>zeigen<img src="/static/img/tree/{{ tree_suggest.tree_id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
-          <td class="admin-picture">{% if tree_suggest.value %}<span>zeigen<img src="/static/img/tree/{{ tree_suggest.tree_id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
+          <td class="admin-picture">{% if tree_suggest.value %}<span>zeigen<img src="/admin/suggest-tree-picture?id={{ tree_suggest.id }}&size=small" /></span>{% else %}-{% endif %}</td>
         {% else %}
           <td>{{ tree_suggest.value }}</td>
           <td>{{ tree_suggest.tree.type }}</td>
         {% endif %}
-        <td></td>
+        <td class="admin-action">
+          <span onclick="update_value($(this), {'type': 'update', 'tree_id': {{ tree_suggest.tree_id }}, 'tree_suggest_id': '{{ tree_suggest.id }}', 'field': '{{ tree_suggest.field }}', 'value': '{{ tree_suggest.value }}' });">übernehmen</span>,
+          <span onclick="update_value($(this), {'type': 'suggest-delete', 'tree_suggest_id': '{{ tree_suggest.id }}' });">löschen</span></td>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

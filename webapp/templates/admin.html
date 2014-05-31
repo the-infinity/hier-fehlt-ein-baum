@@ -37,7 +37,7 @@
         <td>{{ tree.address }}</td>
         <td>{{ tree.descr }}</td>
         <td class="admin-picture">{% if tree.picture %}<span>zeigen<img src="/static/img/tree/{{ tree.id }}-small.jpg" /></span>{% else %}-{% endif %}</td>
-        <td class="admin-action">{% if tree.public %}<span class="action-depublish" id="depublish-{{ tree.id }}">depublizieren</span>{% else %}<span class="action-publish" id="publish-{{ tree.id }}">publizieren</span>{% endif %}</td>
+        <td class="admin-action"><span onclick="update_value($(this), {'type': 'update', 'tree_id': {{ tree.id }}, 'field': 'public', 'value': '{{ '0' if tree.public else '1' }}' });">{{ 'depublizieren' if tree.public else 'publizieren' }}</span></td>
       </tr>
       {% endfor %}
     </tbody>

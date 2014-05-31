@@ -24,7 +24,7 @@ entstanden.
 """
 
 from webapp import app, basic_auth, mail
-from flask import render_template, make_response, abort, request, Response, redirect, flash
+from flask import render_template, make_response, abort, request, Response, redirect, flash, send_file
 from flask.ext.mail import Message
 from models import *
 from forms import *
@@ -32,6 +32,7 @@ import models, util
 import json, time, os, datetime
 from subprocess import call
 from sqlalchemy import or_
+import socket
 
 
 @app.route('/')
@@ -111,6 +112,8 @@ def new_tree():
     tree.source = 'Nutzer'
     tree.created_at = datetime.datetime.now()
     tree.modified_at = datetime.datetime.now()
+    tree.ip = request.remote_addr
+    tree.hostname = socket.gethostbyaddr(request.remote_addr)[0]
     db.session.add(tree)
     db.session.commit()
     msg = Message(recipients=app.config['INFO_MAIL_RECIPIENTS'],
@@ -142,6 +145,8 @@ def tree_suggest():
     else:
       tree_suggest.value = request.args.get('value')
     tree_suggest.created_at = datetime.datetime.now()
+    tree_suggest.ip = request.remote_addr
+    tree_suggest.hostname = socket.gethostbyaddr(request.remote_addr)[0]
   except ValueError, TypeError:
     abort(500)
   db.session.add(tree_suggest)
@@ -207,35 +212,22 @@ def admin_suggest():
 def admin_action():
   start = time.time()
   jsonp_callback = request.args.get('callback', None)
-  publish = int(request.args.get('publish', 0))
-  status = 0
-  tree_id = 0
-  if publish:
-    tree = Tree.query.filter_by(id=publish).first_or_404()
-    tree.public = 1
-    db.session.add(tree)
-    db.session.commit()
-    tree_id = publish
-    status = 1
-  depublish = int(request.args.get('depublish', 0))
-  if depublish:
-    tree = Tree.query.filter_by(id=depublish).first_or_404()
-    tree.public = 0
-    db.session.add(tree)
-    db.session.commit()
-    tree_id = depublish
-    status = 1
-  delete = int(request.args.get('delete', 0))
-  if delete:
+  action_type = request.args.get('type', 0)
+  if action_type == 'update':
+    field = request.args.get('field', 0)
+    value = request.args.get('value', 0)
+    tree_id = int(request.args.get('tree_id', 0))
     tree = Tree.query.filter_by(id=tree_id).first_or_404()
-    #tree.public = 1
-    #db.session.add(tree)
-    #db.session.commit()
-    tree_id = delete
-    status = 1
+    setattr(tree, field, value)
+    db.session.add(tree)
+    db.session.commit()
+  tree_suggest_id = request.args.get('tree_suggest_id', 0)
+  if tree_suggest_id:
+    tree_suggest = TreeSuggest.query.filter_by(id=tree_suggest_id).first_or_404()
+    db.session.delete(tree_suggest)
+    db.session.commit()
   obj = {
-    'result': status,
-    'tree_id': tree_id
+    'result': 1
   }
   obj['duration'] = int((time.time() - start) * 1000)
   json_output = json.dumps(obj, sort_keys=True)
@@ -248,10 +240,18 @@ def admin_action():
   response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
   return response
   
-@app.route('/admin/picture-suggest')
+@app.route('/admin/suggest-tree-picture')
 @basic_auth.required
 def admin_picture_suggest():
-  pass
+  image_id = int(request.args.get('id', 0))
+  size = request.args.get('size', '')
+  if size:
+    size = '-' + size
+  size = ''
+  if image_id:
+    return send_file(os.path.join(app.config['SUGGEST_IMAGE_UPLOAD_PATH_BASE'], str(image_id) + size + '.jpg'), mimetype='image/jpeg')
+  else:
+    abort(400)
 
 
 @app.route("/geocode")

@@ -15,6 +15,9 @@ class Tree(db.Model):
   author = db.Column(db.String(255))
   email = db.Column(db.String(255))
   
+  ip = db.Column(db.String(15))
+  hostname = db.Column(db.String(255))
+  
   address = db.Column(db.String(255))
   postalcode = db.Column(db.String(255))
   city = db.Column(db.String(255))
@@ -51,6 +54,9 @@ class TreeSuggest(db.Model):
   field = db.Column(db.String(255))
   value = db.Column(db.String(255))
   created_at = db.Column(db.DateTime())
+  
+  ip = db.Column(db.String(15))
+  hostname = db.Column(db.String(255))
   
   def __init__(self):
     pass

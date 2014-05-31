@@ -48,6 +48,8 @@ $(document).ready(function() {
         }
       }).addTo(map);
     });
+    if ($('#flashes').exists())
+      close_sidebar();
     get_trees();
   }
 });
